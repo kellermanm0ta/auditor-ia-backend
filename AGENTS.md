@@ -11,11 +11,11 @@
 ## Commands
 
 ```bash
-# start PostgreSQL
-docker compose up -d
+# start PostgreSQL (compose lives in ../infra — starts only postgres)
+cd ../infra && docker compose up -d postgres
 
 # run dev server (from repo root)
-uvicorn app.main:app --reload
+cd ../backend && uvicorn app.main:app --reload
 
 # tests
 pytest                                  # all
@@ -46,16 +46,16 @@ app/
   api/output_format_routes.py — /api/output-formats CRUD
   api/history_routes.py     — /api/history CRUD
   api/config_routes.py      — /api/config GET/PUT
-scripts/
-  init.sql         — PostgreSQL init script (seeds integrations, skills, output_formats, history)
 tests/             — pytest-asyncio tests using httpx ASGITransport
 ```
+(Seed script `infra/scripts/init.sql` and docker-compose live in `../infra`, not here.)
 
 ## Key facts
 - `.env` is gitignored; copy `.env.example` to get started
-- PostgreSQL runs via `docker compose up -d` (reads env vars from `.env` — no hardcoded credentials)
+- PostgreSQL runs via the compose in `../infra` — `cd ../infra && docker compose up -d postgres` (reads env vars from `infra/.env` — no hardcoded credentials)
+- `backend/.env` drives local `uvicorn`: `POSTGRES_HOST=localhost`, `POSTGRES_PORT=5432`; must match `infra/.env` creds (postgres/postgres/auditoria)
+- Full stack (postgres + api + nextjs + nginx) comes up from `../infra`: `docker compose up -d --build`
 - `docker compose` requires Docker Engine 24+ and Compose v2.23+; use `docker compose` (plugin), not `docker-compose`
-- `DATABASE_URL` in `.env` uses `${POSTGRES_USER}`, `${POSTGRES_PASSWORD}`, `${POSTGRES_DB}` interpolation to stay in sync with Docker Compose
 - On Windows, activate venv with `.venv\Scripts\activate` (cmd) or `.venv\Scripts\Activate.ps1` (PowerShell)
 - DB is wired into `/api/integrations` routes via `get_db` dependency
 - `Integration.steps` stored as JSON string in `TEXT` column; deserialized to `list[str]` via Pydantic `@field_validator`

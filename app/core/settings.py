@@ -7,12 +7,17 @@ class Settings(BaseSettings):
     postgres_user: str
     postgres_password: str
     postgres_db: str
+    postgres_host: str
+    postgres_port: int
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     @property
     def database_url(self) -> str:
-        return f"postgresql://{self.postgres_user}:{self.postgres_password}@localhost:5432/{self.postgres_db}"
+        return (
+            f"postgresql://{self.postgres_user}:{self.postgres_password}"
+            f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+        )
 
 
 settings = Settings()

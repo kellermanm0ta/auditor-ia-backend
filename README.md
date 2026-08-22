@@ -4,19 +4,24 @@ API backend do AuditorIA, um sistema de auditoria inteligente.
 
 ## Pré-requisitos
 
-- **Docker** 24+ e **Docker Compose** v2.23+
+- **Docker** 24+ e **Docker Compose** v2.23+ (apenas para o banco de dados)
 - **Python** 3.11+ (apenas para desenvolvimento fora do container)
 
 ## Setup com Docker (recomendado)
+
+O banco é orquestrado pelo `infra/` (anti-guias de infra do repositório), não pelo backend:
 
 ```bash
 # 1. Configure as variáveis de ambiente
 cp .env.example .env
 
-# 2. Suba o PostgreSQL
-docker compose up -d
+# 2. Sobe somente o PostgreSQL (a partir de infra/)
+cd ../infra
+cp .env.example .env       # primeira vez
+docker compose up -d postgres
 
-# 3. Instale as dependências Python
+# 3. Instale as dependências Python (volte para backend/)
+cd ../backend
 python -m venv .venv
 
 # Linux/macOS
@@ -34,8 +39,10 @@ pip install -e ".[dev]"
 uvicorn app.main:app --reload
 ```
 
-> O Docker Compose lê automaticamente as variáveis do arquivo `.env`.  
-> As credenciais do banco (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`) vêm deste arquivo e não ficam hardcoded no `docker-compose.yml`.
+> O docker-compose do banco fica em `infra/docker-compose.yml` e lê o `infra/.env`.
+> O `backend/.env` segue sendo o usado pelo `uvicorn` local: credenciais (`POSTGRES_USER`,
+> `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_HOST=localhost`, `POSTGRES_PORT=5432`) devem
+> coincidir com as do banco.
 
 ### Docker Compose — versões compatíveis
 
@@ -81,7 +88,8 @@ Acesse `http://localhost:8000/docs` para a documentação interativa (Swagger).
 
 ## Seed automático
 
-Na primeira inicialização do Docker Compose, o script `scripts/init.sql` é executado automaticamente pelo PostgreSQL, populando o banco com dados padrão:
+Na primeira inicialização do banco, o `infra/scripts/init.sql` é executado automaticamente pelo
+PostgreSQL (via compose do `infra/`), populando o banco com dados padrão:
 
 | Tabela | Registros seedados |
 |---|---|
@@ -91,11 +99,11 @@ Na primeira inicialização do Docker Compose, o script `scripts/init.sql` é ex
 | `history` | 5 análises de exemplo |
 | `config` | Configuração inicial (modo `PARALELO`, markdown, 3 skills habilitadas) |
 
-Para resetar o banco e recomeçar do zero:
+Para resetar o banco e recomeçar do zero (a partir de `infra/`):
 
 ```bash
 docker compose down -v
-docker compose up -d
+docker compose up -d postgres
 ```
 
 ## Endpoints
@@ -150,7 +158,7 @@ ruff format --check .
 | `app/models/` | Modelos ORM (`Integration`, `Skill`, `OutputFormat`, `History`, `Config`) |
 | `app/schemas/` | Schemas Pydantic de request/response |
 | `app/services/` | Lógica de negócio (CRUD com DB) |
-| `scripts/` | Script de inicialização do banco (`init.sql`) |
 | `tests/` | Testes com pytest + httpx ASGITransport |
 
 > Nota: `/api/config` é um singleton (sempre `id=1`). As tabelas são criadas automaticamente na inicialização da aplicação via `Base.metadata.create_all` (fallback quando roda sem Docker).
+> O script de seed (`init.sql`) e o docker-compose do banco ficam em `infra/`.
