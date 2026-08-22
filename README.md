@@ -2,6 +2,21 @@
 
 API backend do AuditorIA, um sistema de auditoria inteligente.
 
+## Repositório de infraestrutura dependida
+
+O banco de dados (PostgreSQL) é orquestrado pelo repositório de infraestrutura do AuditorIA:
+
+```
+git@github.com:kellermanm0ta/auditoria-infra.git
+```
+
+Para subir o banco em desenvolvimento, clone a infra num diretório irmão e rode:
+
+```bash
+cd auditoria-infra
+docker compose up -d postgres
+```
+
 ## Pré-requisitos
 
 - **Docker** 24+ e **Docker Compose** v2.23+ (apenas para o banco de dados)
