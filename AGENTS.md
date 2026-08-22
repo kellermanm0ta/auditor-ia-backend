@@ -28,8 +28,6 @@ ruff format --check .
 ruff check --fix .
 ruff format .
 
-# seed database with frontend integration data
-python scripts/seed.py
 ```
 
 ## Architecture
@@ -44,7 +42,7 @@ app/
   services/        — business logic (integration_service uses DB; item_service is in-memory stub)
   api/routes.py    — APIRouter mounted under /api (integration CRUD + item stubs)
 scripts/
-  seed.py          — POSTs all 6 integrations from frontend data via API
+  init.sql         — PostgreSQL init script (seeds integrations, skills, output_formats, history)
 tests/             — pytest-asyncio tests using httpx ASGITransport
 ```
 

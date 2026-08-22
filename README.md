@@ -77,14 +77,6 @@ uvicorn app.main:app --reload
 
 Acesse `http://localhost:8000/docs` para a documentação interativa (Swagger).
 
-### Seed de dados
-
-Para popular o banco com as integrações do frontend (GitHub Actions, GitLab CI, Jenkins, etc.):
-
-```bash
-python scripts/seed.py
-```
-
 ## Endpoints
 
 | Método | Rota | Descrição |
@@ -95,6 +87,21 @@ python scripts/seed.py
 | `POST` | `/api/integrations` | Criar integração |
 | `PUT` | `/api/integrations/{id}` | Atualizar integração |
 | `DELETE` | `/api/integrations/{id}` | Remover integração |
+| `GET` | `/api/skills` | Listar skills |
+| `GET` | `/api/skills/{id}` | Buscar skill |
+| `POST` | `/api/skills` | Criar skill |
+| `PUT` | `/api/skills/{id}` | Atualizar skill |
+| `DELETE` | `/api/skills/{id}` | Remover skill |
+| `GET` | `/api/output-formats` | Listar formatos de saída |
+| `GET` | `/api/output-formats/{id}` | Buscar formato |
+| `POST` | `/api/output-formats` | Criar formato |
+| `PUT` | `/api/output-formats/{id}` | Atualizar formato |
+| `DELETE` | `/api/output-formats/{id}` | Remover formato |
+| `GET` | `/api/history` | Listar histórico |
+| `GET` | `/api/history/{id}` | Buscar item do histórico |
+| `POST` | `/api/history` | Criar item no histórico |
+| `PUT` | `/api/history/{id}` | Atualizar item |
+| `DELETE` | `/api/history/{id}` | Remover item |
 
 ## Testes
 
@@ -117,10 +124,10 @@ ruff format --check .
 | `app/api/` | Rotas (prefixo `/api`) |
 | `app/core/` | Configuração via pydantic-settings |
 | `app/db/` | Engine, sessão SQLAlchemy e dependência `get_db` |
-| `app/models/` | Modelos ORM (`Integration`) |
+| `app/models/` | Modelos ORM (`Integration`, `Skill`, `OutputFormat`, `History`) |
 | `app/schemas/` | Schemas Pydantic de request/response |
-| `app/services/` | Lógica de negócio (integrações com DB, items em memória) |
-| `scripts/` | Scripts utilitários (`seed.py`) |
+| `app/services/` | Lógica de negócio (CRUD com DB) |
+| `scripts/` | Script de inicialização do banco (`init.sql`) |
 | `tests/` | Testes com pytest + httpx ASGITransport |
 
 > Nota: Migrations do Alembic ainda não foram inicializadas. As tabelas são criadas automaticamente na inicialização da aplicação via `Base.metadata.create_all`.
