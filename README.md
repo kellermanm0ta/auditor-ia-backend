@@ -89,7 +89,7 @@ Na primeira inicialização do Docker Compose, o script `scripts/init.sql` é ex
 | `skills` | Segurança, Arquitetura, Code Smell, Desempenho, Dependências |
 | `output_formats` | Markdown, JSON, HTML, PDF |
 | `history` | 5 análises de exemplo |
-| `config` | Configuração inicial (modo Paralelo, markdown, 3 skills habilitadas) |
+| `config` | Configuração inicial (modo `PARALELO`, markdown, 3 skills habilitadas) |
 
 Para resetar o banco e recomeçar do zero:
 
@@ -145,7 +145,7 @@ ruff format --check .
 |-----------|------------|
 | `app/main.py` | Criação da aplicação FastAPI + criação automática das tabelas |
 | `app/api/` | Rotas por entidade (`integration_routes`, `skill_routes`, `output_format_routes`, `history_routes`, `config_routes`) |
-| `app/core/` | Configuração via pydantic-settings |
+| `app/core/` | Configuração via pydantic-settings (`settings.py`) |
 | `app/db/` | Engine, sessão SQLAlchemy e dependência `get_db` |
 | `app/models/` | Modelos ORM (`Integration`, `Skill`, `OutputFormat`, `History`, `Config`) |
 | `app/schemas/` | Schemas Pydantic de request/response |
