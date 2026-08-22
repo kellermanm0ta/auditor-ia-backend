@@ -1,13 +1,16 @@
 import json
+from typing import Literal
 
 from pydantic import BaseModel, field_validator
 from pydantic.alias_generators import to_camel
+
+ExecutionMode = Literal["PARALELO", "SERIE"]
 
 
 class ConfigBase(BaseModel):
     model_config = {"alias_generator": to_camel, "populate_by_name": True}
 
-    execution_mode: str = "Paralelo"
+    execution_mode: ExecutionMode = "PARALELO"
     output_format_id: int
     skill_ids: list[str]
 
@@ -15,7 +18,7 @@ class ConfigBase(BaseModel):
 class ConfigUpdate(BaseModel):
     model_config = {"alias_generator": to_camel, "populate_by_name": True}
 
-    execution_mode: str | None = None
+    execution_mode: ExecutionMode | None = None
     output_format_id: int | None = None
     skill_ids: list[str] | None = None
 

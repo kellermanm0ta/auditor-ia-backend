@@ -2,7 +2,7 @@ import json
 
 from sqlalchemy.orm import Session
 
-from app.models.config import Config
+from app.models.config import Config, ExecutionMode
 from app.schemas.config import ConfigUpdate
 
 
@@ -18,7 +18,7 @@ class ConfigService:
         if not config:
             config = Config(
                 id=1,
-                execution_mode="Paralelo",
+                execution_mode=ExecutionMode.PARALELO.value,
                 output_format_id=1,
                 skill_ids=json.dumps(["seguranca", "arquitetura", "codesmell"]),
             )

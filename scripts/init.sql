@@ -215,11 +215,11 @@ ON CONFLICT DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS config (
     id INTEGER PRIMARY KEY DEFAULT 1,
-    execution_mode VARCHAR(20) NOT NULL DEFAULT 'Paralelo',
+    execution_mode VARCHAR(20) NOT NULL DEFAULT 'PARALELO',
     output_format_id INTEGER NOT NULL,
     skill_ids TEXT NOT NULL
 );
 
 INSERT INTO config (id, execution_mode, output_format_id, skill_ids)
-VALUES (1, 'Paralelo', 1, '["seguranca","arquitetura","codesmell"]')
+VALUES (1, 'PARALELO', 1, '["seguranca","arquitetura","codesmell"]')
 ON CONFLICT (id) DO NOTHING;

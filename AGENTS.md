@@ -35,7 +35,7 @@ ruff format .
 ```
 app/
   main.py          — FastAPI app + /health; creates DB tables via lifespan
-  core/config.py   — pydantic-settings (reads .env)
+  core/settings.py  — pydantic-settings (reads .env)
   db/session.py    — SQLAlchemy engine + session factory + get_db dependency
   models/          — ORM models (Integration with steps stored as JSON string)
   schemas/         — Pydantic request/response schemas
