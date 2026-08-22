@@ -40,7 +40,12 @@ app/
   models/          — ORM models (Integration with steps stored as JSON string)
   schemas/         — Pydantic request/response schemas
   services/        — business logic (integration_service uses DB; item_service is in-memory stub)
-  api/routes.py    — APIRouter mounted under /api (integration CRUD + item stubs)
+  api/routes.py             — aggregates all sub-routers
+  api/integration_routes.py — /api/integrations CRUD
+  api/skill_routes.py       — /api/skills CRUD
+  api/output_format_routes.py — /api/output-formats CRUD
+  api/history_routes.py     — /api/history CRUD
+  api/config_routes.py      — /api/config GET/PUT
 scripts/
   init.sql         — PostgreSQL init script (seeds integrations, skills, output_formats, history)
 tests/             — pytest-asyncio tests using httpx ASGITransport
