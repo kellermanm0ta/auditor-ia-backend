@@ -77,6 +77,27 @@ uvicorn app.main:app --reload
 
 Acesse `http://localhost:8000/docs` para a documentação interativa (Swagger).
 
+> **Payload**: todos os endpoints da API aceitam e retornam **camelCase** (ex: `statusLabel`, `docUrl`, `createdAt`).
+
+## Seed automático
+
+Na primeira inicialização do Docker Compose, o script `scripts/init.sql` é executado automaticamente pelo PostgreSQL, populando o banco com dados padrão:
+
+| Tabela | Registros seedados |
+|---|---|
+| `integrations` | GitHub Actions, GitLab CI, Jenkins, Webhook, CLI, Slack |
+| `skills` | Segurança, Arquitetura, Code Smell, Desempenho, Dependências |
+| `output_formats` | Markdown, JSON, HTML, PDF |
+| `history` | 5 análises de exemplo |
+| `config` | Configuração inicial (modo Paralelo, markdown, 3 skills habilitadas) |
+
+Para resetar o banco e recomeçar do zero:
+
+```bash
+docker compose down -v
+docker compose up -d
+```
+
 ## Endpoints
 
 | Método | Rota | Descrição |
@@ -123,13 +144,13 @@ ruff format --check .
 | Diretório | Finalidade |
 |-----------|------------|
 | `app/main.py` | Criação da aplicação FastAPI + criação automática das tabelas |
-| `app/api/` | Rotas (prefixo `/api`) |
+| `app/api/` | Rotas por entidade (`integration_routes`, `skill_routes`, `output_format_routes`, `history_routes`, `config_routes`) |
 | `app/core/` | Configuração via pydantic-settings |
 | `app/db/` | Engine, sessão SQLAlchemy e dependência `get_db` |
-| `app/models/` | Modelos ORM (`Integration`, `Skill`, `OutputFormat`, `History`) |
+| `app/models/` | Modelos ORM (`Integration`, `Skill`, `OutputFormat`, `History`, `Config`) |
 | `app/schemas/` | Schemas Pydantic de request/response |
 | `app/services/` | Lógica de negócio (CRUD com DB) |
 | `scripts/` | Script de inicialização do banco (`init.sql`) |
 | `tests/` | Testes com pytest + httpx ASGITransport |
 
-> Nota: Migrations do Alembic ainda não foram inicializadas. As tabelas são criadas automaticamente na inicialização da aplicação via `Base.metadata.create_all`.
+> Nota: `/api/config` é um singleton (sempre `id=1`). As tabelas são criadas automaticamente na inicialização da aplicação via `Base.metadata.create_all` (fallback quando roda sem Docker).
