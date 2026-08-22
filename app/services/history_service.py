@@ -10,7 +10,7 @@ class HistoryService:
         self.db = db
 
     def create(self, data: HistoryCreate) -> History:
-        obj = History(**data.model_dump())
+        obj = History(**data.model_dump(by_alias=False))
         self.db.add(obj)
         self.db.commit()
         self.db.refresh(obj)
@@ -26,7 +26,7 @@ class HistoryService:
         obj = self.db.get(History, history_id)
         if not obj:
             return None
-        vals = data.model_dump(exclude_unset=True)
+        vals = data.model_dump(exclude_unset=True, by_alias=False)
         for field, value in vals.items():
             setattr(obj, field, value)
         self.db.commit()

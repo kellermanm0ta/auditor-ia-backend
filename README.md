@@ -102,6 +102,8 @@ Acesse `http://localhost:8000/docs` para a documentação interativa (Swagger).
 | `POST` | `/api/history` | Criar item no histórico |
 | `PUT` | `/api/history/{id}` | Atualizar item |
 | `DELETE` | `/api/history/{id}` | Remover item |
+| `GET` | `/api/config` | Obter configuração |
+| `PUT` | `/api/config` | Atualizar configuração |
 
 ## Testes
 

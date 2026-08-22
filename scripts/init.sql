@@ -212,3 +212,14 @@ INSERT INTO history (repo, date, issues, severity, agents, time) VALUES
     ('https://github.com/exemplo/meu-projeto', '2026-08-04 10:00:00+00', 7, 'Médio', 4, '58s'),
     ('https://github.com/time/microservice-pagamentos', '2026-08-03 22:30:00+00', 3, 'Baixo', 2, '35s')
 ON CONFLICT DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS config (
+    id INTEGER PRIMARY KEY DEFAULT 1,
+    execution_mode VARCHAR(20) NOT NULL DEFAULT 'Paralelo',
+    output_format_id INTEGER NOT NULL,
+    skill_ids TEXT NOT NULL
+);
+
+INSERT INTO config (id, execution_mode, output_format_id, skill_ids)
+VALUES (1, 'Paralelo', 1, '["seguranca","arquitetura","codesmell"]')
+ON CONFLICT (id) DO NOTHING;

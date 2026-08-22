@@ -2,9 +2,12 @@ import json
 from datetime import datetime
 
 from pydantic import BaseModel, field_validator
+from pydantic.alias_generators import to_camel
 
 
 class IntegrationBase(BaseModel):
+    model_config = {"alias_generator": to_camel, "populate_by_name": True}
+
     name: str
     icon: str
     desc: str
@@ -20,6 +23,8 @@ class IntegrationCreate(IntegrationBase):
 
 
 class IntegrationUpdate(BaseModel):
+    model_config = {"alias_generator": to_camel, "populate_by_name": True}
+
     name: str | None = None
     icon: str | None = None
     desc: str | None = None
@@ -35,7 +40,7 @@ class IntegrationResponse(IntegrationBase):
     created_at: datetime
     updated_at: datetime
 
-    model_config = {"from_attributes": True}
+    model_config = {"alias_generator": to_camel, "populate_by_name": True, "from_attributes": True}
 
     @field_validator("steps", mode="before")
     @classmethod

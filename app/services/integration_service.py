@@ -12,7 +12,7 @@ class IntegrationService:
         self.db = db
 
     def create(self, data: IntegrationCreate) -> Integration:
-        vals = data.model_dump()
+        vals = data.model_dump(by_alias=False)
         vals["steps"] = json.dumps(vals["steps"])
         obj = Integration(**vals)
         self.db.add(obj)
@@ -30,7 +30,7 @@ class IntegrationService:
         obj = self.db.get(Integration, integration_id)
         if not obj:
             return None
-        vals = data.model_dump(exclude_unset=True)
+        vals = data.model_dump(exclude_unset=True, by_alias=False)
         if "steps" in vals:
             vals["steps"] = json.dumps(vals["steps"])
         for field, value in vals.items():

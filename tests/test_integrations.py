@@ -8,8 +8,8 @@ SAMPLE = {
     "icon": "aws",
     "desc": "Monitor de logs da AWS",
     "status": "disconnected",
-    "status_label": "Desconectado",
-    "doc_url": "https://docs.aws.amazon.com/cloudwatch",
+    "statusLabel": "Desconectado",
+    "docUrl": "https://docs.aws.amazon.com/cloudwatch",
     "steps": ["Criar IAM Role", "Configurar endpoint", "Testar conexão"],
     "yaml": "aws:\n  region: us-east-1\n  log_group: /aws/lambda/*",
 }
@@ -25,6 +25,7 @@ async def test_create_integration():
     assert data["name"] == SAMPLE["name"]
     assert data["steps"] == SAMPLE["steps"]
     assert data["id"] is not None
+    assert data["statusLabel"] == SAMPLE["statusLabel"]
 
 
 @pytest.mark.asyncio

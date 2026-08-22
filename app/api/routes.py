@@ -2,10 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
+from app.schemas.config import ConfigResponse, ConfigUpdate
 from app.schemas.history import HistoryCreate, HistoryResponse, HistoryUpdate
 from app.schemas.integration import IntegrationCreate, IntegrationResponse, IntegrationUpdate
 from app.schemas.output_format import OutputFormatCreate, OutputFormatResponse, OutputFormatUpdate
 from app.schemas.skill import SkillCreate, SkillResponse, SkillUpdate
+from app.services.config_service import ConfigService
 from app.services.history_service import HistoryService
 from app.services.integration_service import IntegrationService
 from app.services.output_format_service import OutputFormatService
@@ -193,7 +195,29 @@ async def delete_history(history_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="History entry not found")
 
 
+# ── Config ────────────────────────────────────────────────────────────────────
+
+config_router = APIRouter(prefix="/config", tags=["config"])
+
+
+@config_router.get("", response_model=ConfigResponse)
+async def get_config(db: Session = Depends(get_db)):
+    service = ConfigService(db)
+    config = service.get_or_create_default()
+    return config
+
+
+@config_router.put("", response_model=ConfigResponse)
+async def update_config(data: ConfigUpdate, db: Session = Depends(get_db)):
+    service = ConfigService(db)
+    config = service.update(data)
+    if not config:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Config not found")
+    return config
+
+
 router.include_router(integration_router)
 router.include_router(skill_router)
 router.include_router(output_format_router)
 router.include_router(history_router)
+router.include_router(config_router)

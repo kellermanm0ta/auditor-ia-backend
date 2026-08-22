@@ -1,9 +1,12 @@
 from datetime import datetime
 
 from pydantic import BaseModel
+from pydantic.alias_generators import to_camel
 
 
 class HistoryBase(BaseModel):
+    model_config = {"alias_generator": to_camel, "populate_by_name": True}
+
     repo: str
     date: datetime
     issues: int = 0
@@ -17,6 +20,8 @@ class HistoryCreate(HistoryBase):
 
 
 class HistoryUpdate(BaseModel):
+    model_config = {"alias_generator": to_camel, "populate_by_name": True}
+
     repo: str | None = None
     date: datetime | None = None
     issues: int | None = None
@@ -29,4 +34,4 @@ class HistoryResponse(HistoryBase):
     id: int
     created_at: datetime
 
-    model_config = {"from_attributes": True}
+    model_config = {"alias_generator": to_camel, "populate_by_name": True, "from_attributes": True}
